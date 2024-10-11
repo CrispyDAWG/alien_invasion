@@ -66,13 +66,6 @@ class Alien(Sprite):
         self.rect.y = self.y
         r = self.rect 
         return (self.x + self.rect.width >= sr.right or self.x <= 0)
-    
-    def check_ufo_edges(self):
-        self.ufo_rect.x += self.settings.ufo_speed
-        if self.ufo_rect.right > self.settings.scr_width:
-            self.kill()
-        elif self.ufo_rect.left < 0:
-            self.kill()
 
     def update(self):
         self.x += self.v.x
