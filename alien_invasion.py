@@ -35,6 +35,7 @@ class AlienInvasion:
         # Start Alien Invasion in an inactive state.
         self.game_active = False
         self.first = True
+        self.score_button = False
 
         self.play_button = Button(self, "Play")
         self.high_score = Button(self, "High Score")
@@ -59,7 +60,9 @@ class AlienInvasion:
     
     def game_high_score(self):
         self.game_active = False
-        self.first = True
+        self.score_button = True
+        self.screen.fill(self.bg_color)
+        self.screen.blit(self.high_score.score, self.high_score.score_rect)
 
     def restart_game(self):
         self.game_active = False
@@ -81,10 +84,11 @@ class AlienInvasion:
                 self.sb.show_score()
                 self.barriers.update()
 
-            if not self.game_active:
+            if not self.game_active and not self.score_button:
                 self.play_button.draw_button()
+            elif not self.game_active and self.score_button:
+                self.game_high_score()
             pg.display.flip()
-
             self.clock.tick(60)
         sys.exit()
 

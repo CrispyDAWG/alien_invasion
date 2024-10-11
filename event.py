@@ -18,10 +18,10 @@ class Event:
         self.stats = ai_game.stats
         self.sb = ai_game.sb 
         self.game_active = ai_game.game_active
+        # self.in_score_screen = ai_game.in_score_screen
         self.ship = ai_game.ship
         self.play_button = ai_game.play_button
         self.high_score = ai_game.high_score
-        #self.ufo = pg.USEREVENT + 1
 
     def check_events(self):
         for event in pg.event.get():
@@ -34,25 +34,22 @@ class Event:
                 self._check_keyup_events(event)
             elif event.type == pg.MOUSEBUTTONDOWN:
                 mouse_pos = pg.mouse.get_pos()
-                self._check_score_button(mouse_pos)
                 self._check_play_button(mouse_pos)
-            
-            # if event.type == self.ufo:
-            #     self.fleet.create_ufo
-            #     pg.time.set_timer(self.ufo, randint(4000,8000))
+                # self._check_score_button(mouse_pos)
 
     def _check_play_button(self, mouse_pos):
         button_clicked = self.play_button.rect.collidepoint(mouse_pos)
+        high_score_clicked = self.high_score.rect2.collidepoint(mouse_pos)
         if button_clicked and not self.game_active:
             self.settings.initialize_dynamic_settings()
             self.ai_game.reset_game()
-    
-    def _check_score_button(self, mouse_pos):
-        high_score_clicked = self.high_score.rect2.collidepoint(mouse_pos)
-        if high_score_clicked and not self.game_active:
-            self.settings.initialize_dynamic_settings()
-            self.screen.fill(self.settings.bg_colour, self.screen_rect)
+        elif not high_score_clicked or not self.game_active:
             self.ai_game.game_high_score()
+    
+    # def _check_score_button(self, mouse_pos):
+    #     high_score_clicked = self.high_score.rect2.collidepoint(mouse_pos)
+    #     if high_score_clicked and not self.game_active:
+    #             self.ai_game.game_high_score()
 
     def _check_keydown_events(self, event):
         key = event.key

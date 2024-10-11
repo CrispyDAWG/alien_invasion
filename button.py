@@ -1,4 +1,5 @@
 from settings import Settings
+from game_stats import GameStats
 import pygame.font
 
 class Button:
@@ -6,6 +7,7 @@ class Button:
         self.settings = ai_game.settings
         self.screen = ai_game.screen
         self.screen_rect = self.screen.get_rect()
+        self.stats = GameStats(ai_game=self)
 
         self.width, self.height = 200, 50
         self.button_color = (0, 135, 0)
@@ -15,6 +17,7 @@ class Button:
         self.font = pygame.font.SysFont(None, 48)
         self.title_font = pygame.font.SysFont(None, 100)
         self.invaders_font = pygame.font.SysFont(None, 80)
+        self.high_score_font = pygame.font.SysFont(None, 100)
 
         self.rect = pygame.Rect(0, 0, self.width, self.height)
         self.rect2 = pygame.Rect(0, 0, self.width, self.height + 100)
@@ -36,17 +39,22 @@ class Button:
     def _prep_msg(self, msg):
         self.title = self.title_font.render("Space", True, self.text_color)
         self.invaders = self.invaders_font.render("Invaders", True, self.invaders_color)
+
         self.msg_image = self.font.render(msg, True, self.text_color,
                 self.button_color)
         msg = "Highscore"
         self.msg_image2 = self.font.render(msg, True, self.text_color,
                 self.button_color)
+        
+        self.score = self.high_score_font.render(f"High Score: {str(self.stats.high_score)}", True, self.text_color)
 
         self.title_rect = self.title.get_rect(center=(self.settings.scr_width / 2, self.settings.scr_height / 4))
         self.invaders_rect = self.invaders.get_rect(center=(self.settings.scr_width /2, self.settings.scr_height / 4 + self.height))
 
         self.msg_image_rect = self.msg_image.get_rect()
         self.msg_image2_rect = self.msg_image2.get_rect()
+
+        self.score_rect = (self.rect.x - 110, self.rect.y)
 
         self.msg_image_rect.center = self.rect.center
 

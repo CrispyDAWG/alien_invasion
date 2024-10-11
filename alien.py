@@ -29,7 +29,7 @@ class Alien(Sprite):
 
         type = randint(0, 2)
         self.timer = Timer(images=Alien.alien_images[type], delta=(type+1)*600, start_index=type % 2)
-        self.ufo = Timer(images=Alien.ufo_images[Alien.n], start_index=Alien.n % 2)
+        self.ufo = Timer(images=Alien.ufo_images[Alien.n], delta=(type+1)*600, start_index=Alien.n % 2)
         self.explosion_timer = Timer(images=Alien.alien_explosion[Alien.n], delta = 1, start_index=Alien.n, loop_continuously=False)
 
         self.image = self.timer.current_image()
