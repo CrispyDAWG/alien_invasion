@@ -31,6 +31,7 @@ class Settings:
         self.ufo_speed = 2.0
 
         self.alien_points = 50
+        self.ufo_points = randint(100, 500)
 
     def increase_speed(self):
         """Increase speed settings and alien point values."""

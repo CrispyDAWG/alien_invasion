@@ -27,10 +27,16 @@ class Alien(Sprite):
 
         type = randint(0, 2)
         self.timer = Timer(images=Alien.alien_images[type], delta=(type+1)*600, start_index=type % 2)
+        self.alien1 = Timer(images=Alien.alien_images[0], start_index=0)
+        self.alien2 = Timer(images=Alien.alien_images[1], start_index=0)
+        self.alien3 = Timer(images=Alien.alien_images[2], start_index=0)
         self.explosion_timer = Timer(images=Alien.alien_explosion[Alien.n], delta = 1, start_index=Alien.n)
 
         self.image = self.timer.current_image()
         self.explosion_image = self.explosion_timer.current_image()
+        self.alien1_image = self.alien1.current_image()
+        self.alien2_image = self.alien2.current_image()
+        self.alien3_image = self.alien3.current_image()
 
         print(self.image)
 

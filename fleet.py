@@ -65,12 +65,12 @@ class Fleet(Sprite):
              current_x += self.spacing * alien_width
     
     def create_ufo(self): 
-        ufo = Ufo(ai_game=self.ai_game, v=self.vec)
-        ufo.ufo_rect.y = ufo.ufo_rect.height
-        ufo.ufo_y = ufo.ufo_rect.height
-        ufo.ufo_x = ufo.ufo_rect.width
-        ufo.ufo_rect.x = ufo.ufo_rect.width
-        self.ufo_group.add(ufo)
+        new_ufo = Ufo(ai_game=self.ai_game, v=self.vec)
+        new_ufo.rect.y = new_ufo.rect.height
+        new_ufo.y = new_ufo.rect.height
+        new_ufo.x = new_ufo.rect.width
+        new_ufo.rect.x = new_ufo.rect.width
+        self.ufo_group.add(new_ufo)
         
 
     def check_edges(self):
@@ -94,26 +94,25 @@ class Fleet(Sprite):
 
     def update(self):
         collisions = pg.sprite.groupcollide(self.ship.lasers, self.aliens, True, True)
-        # ufo_collide = self.lasers.rect.colliderect(self.ufo.ufo_rect)
-        #collisions = pg.sprite.groupcollide(self.ship.lasers, self.ufo_group, True, True)
         if collisions:
             for aliens in collisions.values():
                 self.screen.blit(self.alien.explosion_image, (aliens[0].rect.centerx, aliens[0].rect.centery))
                 self.stats.score += self.settings.alien_points * len(aliens)
             self.sb.prep_score()
             self.sb.check_high_score()
-        
-        # if ufo_collide:
-        #     for ufo in ufo_collide.values():
-        #         self.screen.blit(self.alien.explosion_image, (ufo[0].ufo_rect.centerx, ufo[0].ufo_rect.centery))
-        #         self.stats.score += self.settings.alien_points * len(ufo_group)
-        #     self.sb.prep_score()
-        #     self.sb.check_high_score()
+
+        collisions = pg.sprite.groupcollide(self.ship.lasers, self.ufo_group, True, True)
+        if collisions:
+            for ufo in collisions.values():
+                self.screen.blit(self.ufo.explode, (ufo[0].rect.centerx, ufo[0].rect.centery))
+                self.stats.score += self.settings.ufo_points  * len(ufo)
+            self.sb.prep_score()
+            self.sb.check_high_score()
 
         if not self.aliens:          
             self.ship.lasers.empty()
             self.create_fleet()
-                    # Increase level.
+            self.create_ufo()
             self.stats.level += 1
             self.sb.prep_level()
             return
@@ -123,11 +122,11 @@ class Fleet(Sprite):
             self.ship.ship_hit()
             return
         
-        # if pg.sprite.spritecollideany(self.ship, self.ufo_group):
-        #     self.screen.blit(self.alien.explosion_image, self.ship.rect.center)
-        #     print("Ship hit!")
-        #     self.ship.ship_hit()
-        #     return
+        if pg.sprite.spritecollideany(self.ship, self.ufo_group):
+            self.screen.blit(self.alien.explosion_image, self.ship.rect.center)
+            print("Ship hit!")
+            self.ship.ship_hit()
+            return
         
         if self.check_bottom():
             return 

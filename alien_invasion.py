@@ -78,6 +78,7 @@ class AlienInvasion:
         self.finished = False
         self.first = True
         self.game_active = False
+        self.score_button = False
         while not self.finished:
             self.finished = self.event.check_events()
             if self.first or self.game_active:
@@ -90,6 +91,8 @@ class AlienInvasion:
 
             if not self.game_active and not self.score_button:
                 self.play_button.draw_button()
+
+
             pg.display.flip()
             self.clock.tick(60)
         sys.exit()

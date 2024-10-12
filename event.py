@@ -46,8 +46,10 @@ class Event:
         if button_clicked and not self.game_active:
             self.settings.initialize_dynamic_settings()
             self.ai_game.reset_game()
-        elif high_score_clicked and not self.game_active:
-            self.ai_game.game_high_score()
+        elif high_score_clicked and not self.score_button:
+                if self.score_button and back_clicked:
+                    self.play_button.draw_button()
+                self.ai_game.game_high_score()
 
     def _check_keydown_events(self, event):
         key = event.key
