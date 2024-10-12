@@ -21,10 +21,11 @@ class Button:
 
         self.rect = pygame.Rect(0, 0, self.width, self.height)
         self.rect2 = pygame.Rect(0, 0, self.width, self.height + 100)
+        self.back_rect = pygame.Rect(0, 0, self.width, self.height * 2 - 50)
+
         self.rect.center = self.screen_rect.center
-        self.rect2.x = self.settings.scr_width / 2 - 100
-        self.rect2.y = self.settings.scr_height / 2 + self.height
         self.rect2.center = self.screen_rect.center
+        self.back_rect.center = self.screen_rect.center
 
         self._prep_msg(msg)
 
@@ -45,6 +46,8 @@ class Button:
         msg = "Highscore"
         self.msg_image2 = self.font.render(msg, True, self.text_color,
                 self.button_color)
+        msg = "Back"
+        self.back_image = self.font.render(msg, True, self.text_color, self.button_color)
         
         self.score = self.high_score_font.render(f"High Score: {str(self.stats.high_score)}", True, self.text_color)
 
@@ -53,12 +56,13 @@ class Button:
 
         self.msg_image_rect = self.msg_image.get_rect()
         self.msg_image2_rect = self.msg_image2.get_rect()
+        self.back_img_rect = self.back_image.get_rect()
 
         self.score_rect = (self.rect.x - 110, self.rect.y)
 
         self.msg_image_rect.center = self.rect.center
-
         self.msg_image2_rect.center = self.rect2.center
+        self.back_img_rect.center = self.back_rect.center
 
     def draw_button(self):
         self.screen.fill(self.bg_color, self.screen_rect)

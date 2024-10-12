@@ -6,6 +6,7 @@ from timer import Timer
 from sound import Sound
 
 from alien import Alien
+from ufo import Ufo
 from pygame.sprite import Sprite
 
 class Fleet(Sprite):
@@ -14,24 +15,33 @@ class Fleet(Sprite):
         self.screen = ai_game.screen
         self.ship = ai_game.ship
         self.aliens = pg.sprite.Group()
+        self.ufo_group = pg.sprite.GroupSingle()
         self.fleet_lasers = pg.sprite.Group()
         self.explosions = pg.sprite.Group()
         self.settings = ai_game.settings
         self.stats = ai_game.stats
         self.sb = ai_game.sb
         self.v = Vector(self.settings.alien_speed, 0)
+        self.vec = Vector(self.settings.alien_speed, 0)
         self.alien = Alien(ai_game=ai_game, v=self.v)
         self.lasers = Laser(ai_game=self)
+        self.ufo = Ufo(ai_game=ai_game, v=self.v)
+
         self.dead = False
 
         # self.aliens.add(alien)
         self.spacing = 1.4
         self.create_fleet()
+        self.create_ufo()
         # self.create_row()
 
     def reset_fleet(self):
         self.aliens.empty()
         self.create_fleet()
+    
+    def reset_ufo(self):
+        self.ufo_group.empty()
+        self.create_ufo()
 
     def create_fleet(self):
         alien = Alien(ai_game=self.ai_game, v=self.v)
@@ -54,17 +64,23 @@ class Fleet(Sprite):
              self.aliens.add(new_alien)
              current_x += self.spacing * alien_width
     
-    # def create_ufo(self):
-    #     self.ufo_group.add(Ufo(self.settings.scr_width))
+    def create_ufo(self): 
+        ufo = Ufo(ai_game=self.ai_game, v=self.vec)
+        ufo.ufo_rect.y = ufo.ufo_rect.height
+        ufo.ufo_y = ufo.ufo_rect.height
+        ufo.ufo_x = ufo.ufo_rect.width
+        ufo.ufo_rect.x = ufo.ufo_rect.width
+        self.ufo_group.add(ufo)
+        
 
     def check_edges(self):
         for alien in self.aliens:
             if alien.check_edges(): 
-                return True 
+                return True
         return False
     
     def check_ufo_edges(self):
-        for  ufo in self.aliens:
+        for ufo in self.ufo_group:
             if ufo.check_ufo_edges():
                 return True
         return False
@@ -76,14 +92,23 @@ class Fleet(Sprite):
                 return True
         return False
 
-    def update(self): 
+    def update(self):
         collisions = pg.sprite.groupcollide(self.ship.lasers, self.aliens, True, True)
+        # ufo_collide = self.lasers.rect.colliderect(self.ufo.ufo_rect)
+        #collisions = pg.sprite.groupcollide(self.ship.lasers, self.ufo_group, True, True)
         if collisions:
             for aliens in collisions.values():
                 self.screen.blit(self.alien.explosion_image, (aliens[0].rect.centerx, aliens[0].rect.centery))
                 self.stats.score += self.settings.alien_points * len(aliens)
             self.sb.prep_score()
             self.sb.check_high_score()
+        
+        # if ufo_collide:
+        #     for ufo in ufo_collide.values():
+        #         self.screen.blit(self.alien.explosion_image, (ufo[0].ufo_rect.centerx, ufo[0].ufo_rect.centery))
+        #         self.stats.score += self.settings.alien_points * len(ufo_group)
+        #     self.sb.prep_score()
+        #     self.sb.check_high_score()
 
         if not self.aliens:          
             self.ship.lasers.empty()
@@ -93,10 +118,16 @@ class Fleet(Sprite):
             self.sb.prep_level()
             return
         if pg.sprite.spritecollideany(self.ship, self.aliens):
-            self.alien.screen.blit(self.alien.explosion_image, (self.ship.rect.centerx, self.ship.rect.centery))
+            self.screen.blit(self.alien.explosion_image, self.ship.rect.center)
             print("Ship hit!")
             self.ship.ship_hit()
             return
+        
+        # if pg.sprite.spritecollideany(self.ship, self.ufo_group):
+        #     self.screen.blit(self.alien.explosion_image, self.ship.rect.center)
+        #     print("Ship hit!")
+        #     self.ship.ship_hit()
+        #     return
         
         if self.check_bottom():
             return 
@@ -106,9 +137,15 @@ class Fleet(Sprite):
             for alien in self.aliens:
                 alien.v.x = self.v.x
                 alien.y += self.settings.fleet_drop_speed
+        if self.check_ufo_edges():
+            self.settings.ufo_speed *= -1 
+            for ufo in self.ufo_group:
+                ufo.vec.x = self.settings.ufo_speed
             
         for alien in self.aliens:
             alien.update()
+        for ufo_group in self.ufo_group:
+            ufo_group.update()
 
     def draw(self): pass
         # for alien in self.aliens:

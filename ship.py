@@ -52,7 +52,6 @@ class Ship(Sprite):
         self.y = max(0, min(y, scr_r.height - self.rect.height))
 
     def ship_hit(self):
-        self.screen.blit(self.explosion_ship, (self.rect.x, self.rect.y))
         self.stats.ships_left -= 1
         print(f"Only {self.stats.ships_left} ships left now")
         self.sb.prep_ships()

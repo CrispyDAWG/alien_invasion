@@ -39,6 +39,7 @@ class AlienInvasion:
 
         self.play_button = Button(self, "Play")
         self.high_score = Button(self, "High Score")
+        self.back = Button(self,"Back")
         self.event = Event(self)
 
     def game_over(self):
@@ -56,6 +57,7 @@ class AlienInvasion:
 
         self.ship.reset_ship()
         self.fleet.reset_fleet()
+        self.fleet.reset_ufo()
         pg.mouse.set_visible(False)
     
     def game_high_score(self):
@@ -63,6 +65,8 @@ class AlienInvasion:
         self.score_button = True
         self.screen.fill(self.bg_color)
         self.screen.blit(self.high_score.score, self.high_score.score_rect)
+        self.screen.blit(self.back.back_image, (self.back.back_img_rect.x, 
+                                                      (self.back.back_img_rect.y * 2) - 10))
 
     def restart_game(self):
         self.game_active = False
@@ -86,13 +90,9 @@ class AlienInvasion:
 
             if not self.game_active and not self.score_button:
                 self.play_button.draw_button()
-            elif not self.game_active and self.score_button:
-                self.game_high_score()
             pg.display.flip()
             self.clock.tick(60)
         sys.exit()
-
-      
 
 if __name__ == '__main__':
     ai = AlienInvasion()

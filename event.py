@@ -3,6 +3,7 @@ import sys
 from vector import Vector 
 from fleet import Fleet
 from random import randint
+from button import Button
 
 class Event:
     di = {pg.K_RIGHT: Vector(1, 0), pg.K_LEFT: Vector(-1, 0),
@@ -18,10 +19,12 @@ class Event:
         self.stats = ai_game.stats
         self.sb = ai_game.sb 
         self.game_active = ai_game.game_active
-        # self.in_score_screen = ai_game.in_score_screen
+        self.score_button = ai_game.score_button
         self.ship = ai_game.ship
         self.play_button = ai_game.play_button
         self.high_score = ai_game.high_score
+        self.back = ai_game.back
+        self.button = Button(self,"Back")
 
     def check_events(self):
         for event in pg.event.get():
@@ -35,21 +38,16 @@ class Event:
             elif event.type == pg.MOUSEBUTTONDOWN:
                 mouse_pos = pg.mouse.get_pos()
                 self._check_play_button(mouse_pos)
-                # self._check_score_button(mouse_pos)
 
     def _check_play_button(self, mouse_pos):
         button_clicked = self.play_button.rect.collidepoint(mouse_pos)
         high_score_clicked = self.high_score.rect2.collidepoint(mouse_pos)
+        back_clicked = self.back.back_rect.collidepoint(mouse_pos)
         if button_clicked and not self.game_active:
             self.settings.initialize_dynamic_settings()
             self.ai_game.reset_game()
-        elif not high_score_clicked or not self.game_active:
+        elif high_score_clicked and not self.game_active:
             self.ai_game.game_high_score()
-    
-    # def _check_score_button(self, mouse_pos):
-    #     high_score_clicked = self.high_score.rect2.collidepoint(mouse_pos)
-    #     if high_score_clicked and not self.game_active:
-    #             self.ai_game.game_high_score()
 
     def _check_keydown_events(self, event):
         key = event.key
