@@ -18,6 +18,7 @@ class Settings:
         self.ship_limit = 3
         self.ship_fire_every = 10
         self.fleet_drop_speed = 10
+        self.fleet_increase_speed = 1.06
 
         self.speedup_scale = 1.1
         self.score_scale = 1.5

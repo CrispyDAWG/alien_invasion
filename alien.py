@@ -30,7 +30,7 @@ class Alien(Sprite):
         self.alien1 = Timer(images=Alien.alien_images[0], start_index=0)
         self.alien2 = Timer(images=Alien.alien_images[1], start_index=0)
         self.alien3 = Timer(images=Alien.alien_images[2], start_index=0)
-        self.explosion_timer = Timer(images=Alien.alien_explosion[Alien.n], delta = 1, start_index=Alien.n)
+        self.explosion_timer = Timer(images=Alien.alien_explosion[Alien.n], delta=(type+1)*600, start_index=Alien.n)
 
         self.image = self.timer.current_image()
         self.explosion_image = self.explosion_timer.current_image()
@@ -45,9 +45,15 @@ class Alien(Sprite):
 
         self.rect.x = self.rect.width
         self.rect.y = self.rect.height
+
+        self.explosion_rect.x = self.explosion_rect.width
+        self.explosion_rect.y = self.explosion_rect.height
         
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
+
+        self.ex_x = float(self.explosion_rect.x)
+        self.ex_y = float(self.explosion_rect.y)
 
         self.dying = False
         self.dead = False
@@ -71,6 +77,8 @@ class Alien(Sprite):
         self.rect.x = self.x
         self.rect.y = self.y
         self.screen.blit(self.image, (self.rect.x, self.rect.y + 40))
+        self.screen.blit
+
 
 
 def main():

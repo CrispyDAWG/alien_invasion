@@ -66,7 +66,7 @@ class AlienInvasion:
         self.screen.fill(self.bg_color)
         self.screen.blit(self.high_score.score, self.high_score.score_rect)
         self.screen.blit(self.back.back_image, (self.back.back_img_rect.x, 
-                                                      (self.back.back_img_rect.y * 2) - 10))
+                                                      (self.back.back_img_rect.y * 2) - 50))
 
     def restart_game(self):
         self.game_active = False

@@ -26,8 +26,11 @@ class Fleet(Sprite):
         self.alien = Alien(ai_game=ai_game, v=self.v)
         self.lasers = Laser(ai_game=self)
         self.ufo = Ufo(ai_game=ai_game, v=self.v)
+        self.sound = Sound()
 
         self.dead = False
+        self.explosion = False
+        self.center = 0
 
         # self.aliens.add(alien)
         self.spacing = 1.4
@@ -71,6 +74,14 @@ class Fleet(Sprite):
         new_ufo.x = new_ufo.rect.width
         new_ufo.rect.x = new_ufo.rect.width
         self.ufo_group.add(new_ufo)
+
+    # def create_explosions(self): 
+    #     explode = Alien(ai_game=self.ai_game, v=self.vec)
+    #     explode.explosion_rect.y = explode.rect.height
+    #     explode.ex_y = explode.rect.height
+    #     explode.ex_x = explode.rect.width
+    #     explode.explosion_rect.x = explode.rect.width
+    #     self.explosions.add(explode)
         
 
     def check_edges(self):
@@ -91,44 +102,66 @@ class Fleet(Sprite):
                 self.ship.ship_hit()
                 return True
         return False
-
     def update(self):
         collisions = pg.sprite.groupcollide(self.ship.lasers, self.aliens, True, True)
         if collisions:
             for aliens in collisions.values():
-                self.screen.blit(self.alien.explosion_image, (aliens[0].rect.centerx, aliens[0].rect.centery))
+                # self.screen.blit(self.alien.explosion_image, aliens[0].rect.center)
+                self.center = aliens[0].rect.center
                 self.stats.score += self.settings.alien_points * len(aliens)
             self.sb.prep_score()
             self.sb.check_high_score()
+            self.screen.blit(self.alien.explosion_image, self.center)
+
 
         collisions = pg.sprite.groupcollide(self.ship.lasers, self.ufo_group, True, True)
         if collisions:
             for ufo in collisions.values():
-                self.screen.blit(self.ufo.explode, (ufo[0].rect.centerx, ufo[0].rect.centery))
-                self.stats.score += self.settings.ufo_points  * len(ufo)
+                self.screen.blit(self.ufo.ufo_points, (ufo[0].rect.centerx, ufo[0].rect.centery))
+                self.stats.score += round(self.settings.ufo_points)  * len(ufo)
             self.sb.prep_score()
             self.sb.check_high_score()
 
-        if not self.aliens:          
+        
+        if len(self.aliens) == 30:
+            self.v.x = self.settings.fleet_increase_speed * 2
+        elif len(self.aliens) == 15:
+            self.v.x = self.settings.fleet_increase_speed * 2.5
+        elif len(self.aliens) == 0:
+            self.v.x = self.settings.alien_speed
+
+        if not self.aliens and not self.ufo_group:
+            self.v.x = self.settings.alien_speed          
             self.ship.lasers.empty()
             self.create_fleet()
             self.create_ufo()
             self.stats.level += 1
+            if  self.stats.level == 2:
+                pg.mixer.music.load('sounds/DS3_speedup.wav')
+                pg.mixer.music.set_volume(1.5)
+                self.sound.play_background()
+            elif self.stats.level == 4:
+                pg.mixer.music.load('sounds/DS3_speedup2.wav')
+                pg.mixer.music.set_volume(1.5)
+                self.sound.play_background()
             self.sb.prep_level()
             return
         if pg.sprite.spritecollideany(self.ship, self.aliens):
             self.screen.blit(self.alien.explosion_image, self.ship.rect.center)
+            self.v.x = self.settings.alien_speed
             print("Ship hit!")
             self.ship.ship_hit()
             return
         
         if pg.sprite.spritecollideany(self.ship, self.ufo_group):
             self.screen.blit(self.alien.explosion_image, self.ship.rect.center)
+            self.v.x = self.settings.alien_speed
             print("Ship hit!")
             self.ship.ship_hit()
             return
         
         if self.check_bottom():
+            self.v.x = self.settings.alien_speed
             return 
         
         if self.check_edges():

@@ -80,6 +80,7 @@ class Barrier(Sprite):    # not a real Barrier class -- should be made up of man
         collisions = pg.sprite.groupcollide(self.barrier_pieces, self.ship_lasers, False, True)
         for c in collisions:
             c.hit()
+            c.kill()
         # _ = pg.sprite.groupcollide(self.barrier_pieces, self.fleet_lasers, True, True)
         self.draw()
 
