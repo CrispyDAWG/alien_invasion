@@ -52,14 +52,15 @@ class Button:
         self.alien2 = self.invaders_font.render("= 50", True, self.alien_text)
         self.alien3 = self.invaders_font.render("= 50", True, self.alien_text)
         self.ufo = self.invaders_font.render("= ???", True, self.alien_text)
-        self.ufo_points = self.invaders_font.render(f"{round(self.settings.ufo_points)}", True,  self.alien_text)
 
 
         self.msg_image = self.font.render(msg, True, self.text_color,
                 self.button_color)
+
         msg = "Highscore"
         self.msg_image2 = self.font.render(msg, True, self.text_color,
                 self.button_color)
+        
         msg = "Back"
         self.back_image = self.font.render(msg, True, self.text_color, self.button_color)
         
@@ -77,7 +78,6 @@ class Button:
         self.back_img_rect = self.back_image.get_rect()
 
         self.score_rect = (self.rect.x - 110, self.rect.y)
-        self.points_rect = self.ufo_points.get_rect()
 
         self.msg_image_rect.center = self.rect.center
         self.msg_image2_rect.center = self.rect2.center

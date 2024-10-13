@@ -75,13 +75,13 @@ class Fleet(Sprite):
         new_ufo.rect.x = new_ufo.rect.width
         self.ufo_group.add(new_ufo)
 
-    # def create_explosions(self): 
-    #     explode = Alien(ai_game=self.ai_game, v=self.vec)
-    #     explode.explosion_rect.y = explode.rect.height
-    #     explode.ex_y = explode.rect.height
-    #     explode.ex_x = explode.rect.width
-    #     explode.explosion_rect.x = explode.rect.width
-    #     self.explosions.add(explode)
+    def create_explosions(self): 
+        explode = Alien(ai_game=self.ai_game, v=self.vec)
+        explode.explosion_rect.y = explode.rect.height
+        explode.ex_y = explode.rect.height
+        explode.ex_x = explode.rect.width
+        explode.explosion_rect.x = explode.rect.width
+        self.explosions.add(explode)
         
 
     def check_edges(self):
@@ -106,12 +106,13 @@ class Fleet(Sprite):
         collisions = pg.sprite.groupcollide(self.ship.lasers, self.aliens, True, True)
         if collisions:
             for aliens in collisions.values():
-                # self.screen.blit(self.alien.explosion_image, aliens[0].rect.center)
-                self.center = aliens[0].rect.center
+                for i in  aliens:
+                    self.screen.blit(self.alien.explosion_image, aliens[0].rect.center)
+                # self.center = aliens[0].rect.center
                 self.stats.score += self.settings.alien_points * len(aliens)
             self.sb.prep_score()
             self.sb.check_high_score()
-            self.screen.blit(self.alien.explosion_image, self.center)
+            # self.screen.blit(self.alien.explosion_image, self.center)
 
 
         collisions = pg.sprite.groupcollide(self.ship.lasers, self.ufo_group, True, True)

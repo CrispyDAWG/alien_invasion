@@ -77,7 +77,7 @@ class Alien(Sprite):
         self.rect.x = self.x
         self.rect.y = self.y
         self.screen.blit(self.image, (self.rect.x, self.rect.y + 40))
-        self.screen.blit
+        self.screen.blit(self.explosion_image, (self.ex_x, self.ex_y))
 
 
 

@@ -6,6 +6,7 @@ from settings import Settings
 from pygame.sprite import Sprite
 from timer import Timer
 from random import randint
+import pygame.font
 
 class Ufo(Sprite):
     ufo_images0  = [pg.image.load(f"images_other/alien3{n}.png") for n in range(2)]
@@ -19,6 +20,7 @@ class Ufo(Sprite):
         self.screen = ai_game.screen
         self.settings = ai_game.settings
         self.vec = v
+
 
         type = randint(0, 2)
         self.timer = Timer(images=Ufo.ufo_images[Ufo.n], delta=(type+1)*600, start_index=type % 2)
@@ -36,6 +38,11 @@ class Ufo(Sprite):
 
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
+
+        self.ufo_font = pygame.font.SysFont(None, 80)
+        self.ufo_text = (255, 0, 0)
+        self.ufo_points = self.ufo_font.render(f"{round(self.settings.ufo_points)}", True,  self.ufo_text)
+        self.points_rect = self.ufo_points.get_rect()
 
     def check_ufo_edges(self):
         sr = self.screen.get_rect()
