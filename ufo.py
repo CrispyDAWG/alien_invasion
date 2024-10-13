@@ -11,8 +11,6 @@ import pygame.font
 class Ufo(Sprite):
     ufo_images0  = [pg.image.load(f"images_other/alien3{n}.png") for n in range(2)]
     ufo_images = [ufo_images0]
-    explosion_image = [pg.image.load(f"images_other/exp51.png")]
-    explosion_images = [explosion_image]
     n = 0
     def __init__(self, ai_game, v): 
         super().__init__()
@@ -25,13 +23,10 @@ class Ufo(Sprite):
         type = randint(0, 2)
         self.timer = Timer(images=Ufo.ufo_images[Ufo.n], delta=(type+1)*600, start_index=type % 2)
         self.ufo_image = Timer(images=Ufo.ufo_images[0], start_index=0)
-        self.explosion = Timer(images=Ufo.explosion_images[0], start_index=0)
         self.image = self.timer.current_image()
         self.ufo = self.ufo_image.current_image()
-        self.explode = self.explosion.current_image()
 
         self.rect = self.image.get_rect()
-        self.explosion_rect = self.explode.get_rect() 
 
         self.rect.x = self.rect.width
         self.rect.y = self.rect.height
@@ -53,7 +48,6 @@ class Ufo(Sprite):
     def update(self):
         self.x += self.settings.ufo_speed
         self.image = self.timer.current_image()
-        self.explode = self.explosion.current_image()
         self.draw()
 
     def draw(self):

@@ -11,12 +11,13 @@ class Timer:
         self.index = start_index
         self.latest = pygame.time.get_ticks()
         self.start_immediately = start_immediately
+        self.timespan = 1000
 
     def start(self): self.start_immediately = True
 
     def finished(self): 
         return not self.loop_continuously and self.index == len(self.images) - 1
-
+    
     def current_image(self):
         if not self.start_immediately: return
         now = pygame.time.get_ticks()
