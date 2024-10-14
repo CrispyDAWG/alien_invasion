@@ -48,7 +48,7 @@ class Alien(Sprite):
         # New attributes for shooting
         self.alien_lasers = pg.sprite.Group()
         self.last_shot = pg.time.get_ticks()
-        self.shoot_delay = random.randint(1000, 3000)  # Random delay between 1-3 seconds
+        self.shoot_delay = random.randint(1000, 20000)  # Random delay between 1-3 seconds
 
 
     def check_edges(self):
