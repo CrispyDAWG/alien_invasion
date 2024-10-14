@@ -50,7 +50,6 @@ class Barrier(Sprite):    # not a real Barrier class -- should be made up of man
         self.settings = ai_game.settings
         self.ship_lasers = ai_game.ship.lasers
         self.fleet = ai_game.fleet
-        self.fleet_lasers = ai_game.fleet.fleet_lasers
         self.barrier_pieces = Group()
         self.create_barrier_pieces()
 
@@ -81,7 +80,14 @@ class Barrier(Sprite):    # not a real Barrier class -- should be made up of man
         for c in collisions:
             c.hit()
             c.kill()
-        # _ = pg.sprite.groupcollide(self.barrier_pieces, self.fleet_lasers, True, True)
+        
+        # Check collisions with alien lasers
+        for alien in self.fleet.aliens:
+            alien_collisions = pg.sprite.groupcollide(self.barrier_pieces, alien.alien_lasers, False, True)
+            for c in alien_collisions:
+                c.hit()
+                c.kill()
+                
         self.draw()
 
     def draw(self):
