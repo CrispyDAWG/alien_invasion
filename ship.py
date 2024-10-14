@@ -46,20 +46,35 @@ class Ship(Sprite):
         self.x = max(0, min(x, scr_r.width - self.rect.width)) 
         self.y = max(0, min(y, scr_r.height - self.rect.height))
 
+    def check_alien_laser_collisions(self):
+        for alien in self.fleet.aliens:
+            if pg.sprite.spritecollideany(self, alien.alien_lasers):
+                self.ship_hit()
+                break  # Exit the loop if hit by any laser
+            
     def ship_hit(self):
         self.stats.ships_left -= 1
         print(f"Only {self.stats.ships_left} ships left now")
         self.sb.prep_ships()
+
+        # Create ship explosion
+        self.fleet.create_ship_explosions(self.rect.centerx, self.rect.centery)
+
         if self.stats.ships_left <= 0:
             self.ai_game.game_over()
+        else:
+            self.lasers.empty()
+            
+            # Clear all alien lasers
+            for alien in self.fleet.aliens:
+                alien.alien_lasers.empty()
+            
+            self.fleet.aliens.empty()
 
-        self.lasers.empty()
-        self.fleet.aliens.empty()
+            self.center_ship()
+            self.fleet.create_fleet()
 
-        self.center_ship()
-        self.fleet.create_fleet()
-
-        sleep(0.5) 
+            sleep(0.5)
 
     def fire_laser(self):
         self.fired += 1
@@ -81,6 +96,9 @@ class Ship(Sprite):
         for laser in self.lasers.copy():
             if laser.rect.bottom <= 0:
                 self.lasers.remove(laser)
+        
+        self.check_alien_laser_collisions()  # Add this line
+        
         for laser in self.lasers.sprites():
             laser.draw() 
         self.draw()
