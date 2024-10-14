@@ -31,8 +31,6 @@ class Fleet(Sprite):
         self.ufo = Ufo(ai_game=ai_game, v=self.v)
         self.sound = Sound()
 
-        self.time = 0
-        self.random_time = randint(1000,3000)
         self.dead = False
         self.explosion = False
 
@@ -44,10 +42,6 @@ class Fleet(Sprite):
     def reset_fleet(self):
         self.aliens.empty()
         self.create_fleet()
-    
-    def reset_ufo(self):
-        self.ufo_group.empty()
-        self.create_ufo()
 
     def create_fleet(self):
         alien = Alien(ai_game=self.ai_game, v=self.v)
@@ -126,6 +120,7 @@ class Fleet(Sprite):
         ufo_collisions = pg.sprite.groupcollide(self.ship.lasers, self.ufo_group, True, True)
         if ufo_collisions:
             for ufo in ufo_collisions.values():
+                self.screen.blit(self.ufo.ufo_points, ufo[0].rect.center)
                 self.stats.score += round(self.settings.ufo_points)  * len(ufo)
             self.sb.prep_score()
             self.sb.check_high_score()
@@ -138,7 +133,7 @@ class Fleet(Sprite):
         elif len(self.aliens) == 0:
             self.v.x = self.settings.alien_speed
 
-        if not self.aliens and not self.ufo_group:
+        if not self.aliens:
             self.v.x = self.settings.alien_speed          
             self.ship.lasers.empty()
             self.create_fleet()

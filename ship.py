@@ -58,7 +58,6 @@ class Ship(Sprite):
 
         self.center_ship()
         self.fleet.create_fleet()
-        self.fleet.create_ufo()
 
         sleep(0.5) 
 

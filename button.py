@@ -72,6 +72,7 @@ class Button:
 
         self.title_rect = self.title.get_rect(center=(self.settings.scr_width / 2, self.settings.scr_height / 4))
         self.invaders_rect = self.invaders.get_rect(center=(self.settings.scr_width /2, self.settings.scr_height / 4 + self.height))
+        
         self.alien1_rect = self.alien1.get_rect(center=(self.settings.scr_width / 4, self.settings.scr_height / 4))
         self.alien2_rect = self.alien2.get_rect(center=(self.settings.scr_width / 4, self.settings.scr_height / 4  + self.height))
         self.alien3_rect = self.alien3.get_rect(center=(self.settings.scr_width / 4, self.settings.scr_height / 4 + self.height * 2))

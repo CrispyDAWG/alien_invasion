@@ -55,9 +55,6 @@ class Ufo(Sprite):
         self.rect.y = self.y
         self.screen.blit(self.image, (self.rect.x, self.rect.y - 40))
 
-
-
-
 def main():
     print('\n run from alien_invasions.py\n')
 

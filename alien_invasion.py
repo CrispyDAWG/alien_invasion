@@ -43,12 +43,13 @@ class AlienInvasion:
         self.back = Button(self,"Back")
         self.event = Event(self)
         self.time = 0
-        self.random_time = randint(1000, 3000)
+        self.random_time = randint(1000, 2000)
 
 
     def game_over(self):
         self.restart_game()
         print("Game over!") 
+        self.sound.pause_ufo_music()
         self.sound.play_gameover()
         self.game_active = False
         
@@ -96,12 +97,15 @@ class AlienInvasion:
                 self.barriers.update()
 
             if not self.fleet.ufo_group:
+                self.sound.pause_ufo_music()
                 if (self.random_time == self.time):
                     self.time += 1
                     self.fleet.create_ufo()
                     self.time = 0
                 elif (self.random_time > self.time):
                     self.time += 1
+            elif self.fleet.ufo_group:
+                self.sound.play_ufo_music()
 
             if self.game_active == False and self.score_button == False:
                 self.play_button.draw_button()
