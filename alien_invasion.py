@@ -51,6 +51,7 @@ class AlienInvasion:
         print("Game over!") 
         self.sound.pause_ufo_music()
         self.sound.play_gameover()
+        self.barriers.create_barriers()
         self.game_active = False
         
         pg.mouse.set_visible(True)
