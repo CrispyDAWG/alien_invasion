@@ -45,6 +45,10 @@ class Button:
         self.msg = msg
         self._prep_msg(msg)
 
+    def back_button(self, msg="Back"):
+        self.msg = msg
+        self._prep_msg(msg)
+
     def _prep_msg(self, msg):
         self.title = self.title_font.render("Space", True, self.text_color)
         self.invaders = self.invaders_font.render("Invaders", True, self.invaders_color)

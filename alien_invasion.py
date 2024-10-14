@@ -11,6 +11,7 @@ from scoreboard import Scoreboard
 from event import Event
 from barrier import Barriers
 from sound import Sound
+from random import randint
 
 
 class AlienInvasion:
@@ -41,23 +42,28 @@ class AlienInvasion:
         self.high_score = Button(self, "High Score")
         self.back = Button(self,"Back")
         self.event = Event(self)
+        self.time = 0
+        self.random_time = randint(1000, 3000)
+
 
     def game_over(self):
         self.restart_game()
         print("Game over!") 
         self.sound.play_gameover()
         self.game_active = False
+        
         pg.mouse.set_visible(True)
 
     def reset_game(self):
         self.stats.reset_stats()
         self.sb.prep_score_level_ships()
         self.game_active = True
+        self.score_button = False
         self.sound.play_background()
 
         self.ship.reset_ship()
         self.fleet.reset_fleet()
-        self.fleet.reset_ufo()
+
         pg.mouse.set_visible(False)
     
     def game_high_score(self):
@@ -89,8 +95,21 @@ class AlienInvasion:
                 self.sb.show_score()
                 self.barriers.update()
 
-            if not self.game_active and not self.score_button:
+            if not self.fleet.ufo_group:
+                if (self.random_time == self.time):
+                    self.time += 1
+                    self.fleet.create_ufo()
+                    self.time = 0
+                elif (self.random_time > self.time):
+                    self.time += 1
+
+            if self.game_active == False and self.score_button == False:
                 self.play_button.draw_button()
+            mouse_pos = pg.mouse.get_pos()
+            back_clicked = self.back.back_rect.collidepoint(mouse_pos)
+            if back_clicked == True and self.score_button == True:
+                self.game_active = False
+                self.score_button = False
 
 
             pg.display.flip()

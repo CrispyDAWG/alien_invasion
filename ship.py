@@ -7,9 +7,6 @@ from time import sleep
 from pygame.sprite import Sprite
 
 class Ship(Sprite):
-    ship_explosion_images = [pg.image.load(f"images_other/alien_boom0{n}.png") for n in range(3)]
-    ship_explosion = [ship_explosion_images]
-    n = 0
     def __init__(self, ai_game, v=Vector()):
         super().__init__()
         self.ai_game = ai_game
@@ -21,8 +18,6 @@ class Ship(Sprite):
 
         self.image = pg.image.load('images/ship.bmp')
         self.rect = self.image.get_rect()
-        self.timer = Timer(images=Ship.ship_explosion[Ship.n], start_index=Ship.n, loop_continuously=False)
-        self.explosion_ship = self.timer.current_image()
         self.rect.midbottom = self.screen_rect.midbottom
         scr_r = self.screen_rect 
         self.x = float(scr_r.midbottom[0])
@@ -89,7 +84,6 @@ class Ship(Sprite):
                 self.lasers.remove(laser)
         for laser in self.lasers.sprites():
             laser.draw() 
-        self.explosion = self.timer.current_image()
         self.draw()
 
     def draw(self): 

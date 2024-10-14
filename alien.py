@@ -32,14 +32,10 @@ class Alien(Sprite):
         self.alien2_image = self.alien2.current_image()
         self.alien3_image = self.alien3.current_image()
 
-        print(self.image)
-
         self.rect = self.image.get_rect()
 
         self.rect.x = self.rect.width
         self.rect.y = self.rect.height
-
-
         
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)

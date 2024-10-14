@@ -7,7 +7,7 @@ from sound import Sound
 
 from alien import Alien
 from ufo import Ufo
-from explosions import Explosions
+from explosions import Explosions, Ship_explosion
 from pygame.sprite import Sprite
 from random import randint
 
@@ -20,6 +20,7 @@ class Fleet(Sprite):
         self.ufo_group = pg.sprite.GroupSingle()
         self.fleet_lasers = pg.sprite.Group()
         self.explosions = pg.sprite.Group()
+        self.ship_explosions = pg.sprite.Group()
         self.settings = ai_game.settings
         self.stats = ai_game.stats
         self.sb = ai_game.sb
@@ -30,13 +31,14 @@ class Fleet(Sprite):
         self.ufo = Ufo(ai_game=ai_game, v=self.v)
         self.sound = Sound()
 
+        self.time = 0
+        self.random_time = randint(1000,3000)
         self.dead = False
         self.explosion = False
 
         # self.aliens.add(alien)
         self.spacing = 1.4
         self.create_fleet()
-        self.create_ufo()
         # self.create_row()
 
     def reset_fleet(self):
@@ -84,6 +86,14 @@ class Fleet(Sprite):
         explode.rect.x = x
         self.explosions.add(explode)
 
+    def create_ship_explosions(self, x, y): 
+        explode = Ship_explosion(ai_game=self.ai_game)
+        explode.rect.y = y
+        explode.y = y
+        explode.x = x
+        explode.rect.x = x
+        self.ship_explosions.add(explode)
+
     def check_edges(self):
         for alien in self.aliens:
             if alien.check_edges(): 
@@ -113,9 +123,9 @@ class Fleet(Sprite):
             self.sb.check_high_score()
 
 
-        collisions = pg.sprite.groupcollide(self.ship.lasers, self.ufo_group, True, True)
-        if collisions:
-            for ufo in collisions.values():
+        ufo_collisions = pg.sprite.groupcollide(self.ship.lasers, self.ufo_group, True, True)
+        if ufo_collisions:
+            for ufo in ufo_collisions.values():
                 self.stats.score += round(self.settings.ufo_points)  * len(ufo)
             self.sb.prep_score()
             self.sb.check_high_score()
@@ -132,25 +142,22 @@ class Fleet(Sprite):
             self.v.x = self.settings.alien_speed          
             self.ship.lasers.empty()
             self.create_fleet()
-            self.create_ufo()
             self.stats.level += 1
+
             if  self.stats.level == 2:
                 pg.mixer.music.load('sounds/DS3_speedup.wav')
                 pg.mixer.music.set_volume(1.5)
                 self.sound.play_background()
+
             elif self.stats.level == 4:
                 pg.mixer.music.load('sounds/DS3_speedup2.wav')
                 pg.mixer.music.set_volume(1.5)
                 self.sound.play_background()
             self.sb.prep_level()
             return
-        if pg.sprite.spritecollideany(self.ship, self.aliens):
-            self.v.x = self.settings.alien_speed
-            print("Ship hit!")
-            self.ship.ship_hit()
-            return
         
-        if pg.sprite.spritecollideany(self.ship, self.ufo_group):
+        if pg.sprite.spritecollideany(self.ship, self.aliens) or pg.sprite.spritecollideany(self.ship, self.ufo_group):
+            self.create_ship_explosions(self.ship.rect.centerx, self.ship.rect.centery)
             self.v.x = self.settings.alien_speed
             print("Ship hit!")
             self.ship.ship_hit()
@@ -176,6 +183,8 @@ class Fleet(Sprite):
             ufo_group.update()
         for explode in self.explosions:
             explode.update()
+        for ship in self.ship_explosions:
+            ship.update()
 
     def draw(self): pass
         # for alien in self.aliens:

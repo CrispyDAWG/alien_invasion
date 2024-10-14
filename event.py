@@ -24,7 +24,8 @@ class Event:
         self.play_button = ai_game.play_button
         self.high_score = ai_game.high_score
         self.back = ai_game.back
-        self.button = Button(self,"Back")
+        self.back_clicked = 0
+        self.fleet = Fleet(ai_game=self)
 
     def check_events(self):
         for event in pg.event.get():
@@ -38,22 +39,16 @@ class Event:
             elif event.type == pg.MOUSEBUTTONDOWN:
                 mouse_pos = pg.mouse.get_pos()
                 self._check_play_button(mouse_pos)
-                self._check_back_button(mouse_pos)
+
 
     def _check_play_button(self, mouse_pos):
         button_clicked = self.play_button.rect.collidepoint(mouse_pos)
         high_score_clicked = self.high_score.rect2.collidepoint(mouse_pos)
-        back_clicked = self.back.back_rect.collidepoint(mouse_pos)
-        if button_clicked and not self.game_active:
+        if button_clicked and not self.game_active and self.score_button == False:
             self.settings.initialize_dynamic_settings()
             self.ai_game.reset_game()
-        elif high_score_clicked and not self.score_button:
+        elif high_score_clicked:
             self.ai_game.game_high_score()
-
-    def _check_back_button(self, mouse_pos):
-        back_clicked = self.back.back_rect.collidepoint(mouse_pos)
-        if back_clicked and not self.game_active:
-            self.play_button.draw_button()
 
     def _check_keydown_events(self, event):
         key = event.key
