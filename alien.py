@@ -1,4 +1,5 @@
 import pygame as pg
+import random 
 from vector import Vector
 from point import Point
 from laser import Laser 
@@ -6,6 +7,7 @@ from settings import Settings
 from pygame.sprite import Sprite
 from timer import Timer
 from random import randint
+from alien_laser import AlienLaser
 
 class Alien(Sprite):
     alien_images0 = [pg.image.load(f"images_other/alien0{n}.png") for n in range(2)]
@@ -42,6 +44,12 @@ class Alien(Sprite):
 
         self.dying = False
         self.dead = False
+        
+        # New attributes for shooting
+        self.alien_lasers = pg.sprite.Group()
+        self.last_shot = pg.time.get_ticks()
+        self.shoot_delay = random.randint(1000, 3000)  # Random delay between 1-3 seconds
+
 
     def check_edges(self):
         sr = self.screen.get_rect()
@@ -50,27 +58,32 @@ class Alien(Sprite):
         r = self.rect 
         return (self.x + self.rect.width >= sr.right or self.x <= 0)
 
-
+    def alien_shoot(self):
+        now = pg.time.get_ticks()
+        if now - self.last_shot > self.shoot_delay:
+            self.last_shot = now
+            self.shoot_delay = random.randint(1000, 3000)  # Reset the delay
+            new_laser = AlienLaser(self.ai_game, self)
+            self.alien_lasers.add(new_laser)
+            
     def update(self):
         self.x += self.v.x
         self.y += self.v.y
         self.image = self.timer.current_image()
+        self.alien_shoot()
+        self.alien_lasers.update()  # Changed from 'lasers' to 'alien_lasers'
         self.draw()
 
     def draw(self): 
         self.rect.x = self.x
         self.rect.y = self.y
         self.screen.blit(self.image, (self.rect.x, self.rect.y + 40))
-
-
-
+        for alien_laser in self.alien_lasers:
+            alien_laser.draw()  # Using AlienLaser's draw method directly
 
 def main():
     print('\n run from alien_invasions.py\n')
 
 if __name__ == "__main__":
     main()
-
-
-
-
+    
